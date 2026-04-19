@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="proj2.Views.MainWindow"
+        Title="Dark moon"
+        Width="320" Height="420"
+        WindowStartupLocation="CenterScreen"
+        Background="#1a1a2e">
+
+  <Border Margin="16" CornerRadius="16"
+          Background="#16213e"
+          BorderBrush="#2a2a4a" BorderThickness="1">
+    <StackPanel Margin="20">
+
+      <!-- Header -->
+      <Grid Margin="0,0,0,16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+          <TextBlock Text="Dark moon"
+                     FontSize="20" FontWeight="SemiBold"
+                     Foreground="White"/>
+          <TextBlock Text="by Build infinity 8"
+                     FontSize="11"
+                     Foreground="#888"/>
+        </StackPanel>
+        <Border Grid.Column="1" Width="28" Height="28"
+                CornerRadius="6"
+                BorderBrush="#444" BorderThickness="1"
+                VerticalAlignment="Top"/>
+      </Grid>
+
+      <!-- Sliders Card -->
+      <Border CornerRadius="12"
+              BorderBrush="#2a2a4a" BorderThickness="1"
+              Background="#0f0f23"
+              Padding="16" Margin="0,0,0,16">
+        <StackPanel Spacing="16">
+
+          <!-- Brightness -->
+          <StackPanel>
+            <Grid Margin="0,0,0,6">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Brightness :" Foreground="#ccc" FontSize="13"/>
+              <TextBlock Grid.Column="1"
+                         x:Name="BrightnessValue"
+                         Text="25 %" Foreground="#ccc" FontSize="13"/>
+            </Grid>
+            <Slider x:Name="BrightnessSlider"
+                    Minimum="0" Maximum="100" Value="25"
+                    ValueChanged="BrightnessSlider_ValueChanged"/>
+          </StackPanel>
+
+          <!-- Contrast -->
+          <StackPanel>
+            <Grid Margin="0,0,0,6">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Contrast :" Foreground="#ccc" FontSize="13"/>
+              <TextBlock Grid.Column="1"
+                         x:Name="ContrastValue"
+                         Text="25 %" Foreground="#ccc" FontSize="13"/>
+            </Grid>
+            <Slider x:Name="ContrastSlider"
+                    Minimum="0" Maximum="100" Value="25"
+                    ValueChanged="ContrastSlider_ValueChanged"/>
+          </StackPanel>
+
+          <!-- Temperature -->
+          <StackPanel>
+            <Grid Margin="0,0,0,6">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Temperature :" Foreground="#ccc" FontSize="13"/>
+              <TextBlock Grid.Column="1"
+                         x:Name="TemperatureValue"
+                         Text="25 %" Foreground="#ccc" FontSize="13"/>
+            </Grid>
+            <Slider x:Name="TemperatureSlider"
+                    Minimum="0" Maximum="100" Value="25"
+                    ValueChanged="TemperatureSlider_ValueChanged"/>
+          </StackPanel>
+
+          <!-- Blue Light Filter -->
+          <StackPanel>
+            <Grid Margin="0,0,0,6">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Blue Light Filter:" Foreground="#ccc" FontSize="13"/>
+              <TextBlock Grid.Column="1"
+                         x:Name="BlueLightValue"
+                         Text="25 %" Foreground="#ccc" FontSize="13"/>
+            </Grid>
+            <Slider x:Name="BlueLightSlider"
+                    Minimum="0" Maximum="100" Value="25"
+                    ValueChanged="BlueLightSlider_ValueChanged"/>
+          </StackPanel>
+
+        </StackPanel>
+      </Border>
+
+      <!-- Buttons -->
+      <Grid ColumnDefinitions="*,12,*">
+        <Button Grid.Column="0" Content="Cancel"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Click="Cancel_Click"/>
+        <Button Grid.Column="2" Content="Apply"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Click="Apply_Click"/>
+      </Grid>
+
+    </StackPanel>
+  </Border>
+</Window>
