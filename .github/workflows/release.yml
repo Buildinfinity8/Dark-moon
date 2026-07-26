@@ -37,7 +37,7 @@ jobs:
 
       - name: Publish ${{ matrix.rid }}
         run: >
-          dotnet publish proj2.csproj -c Release -r ${{ matrix.rid }}
+          dotnet publish DarkMoon.csproj -c Release -r ${{ matrix.rid }}
           --self-contained true
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true

@@ -1,4 +1,4 @@
-# Monitor Control (proj2)
+# Dark moon
 
 A cross-platform desktop application built with **Avalonia UI** and **.NET 10** to control external monitor settings like brightness and contrast directly from your computer.
 
@@ -34,7 +34,7 @@ A cross-platform desktop application built with **Avalonia UI** and **.NET 10** 
 ### Clone the repository
 ```bash
 git clone <repository-url>
-cd proj2
+cd Dark-moon
 ```
 
 ### Build and Run

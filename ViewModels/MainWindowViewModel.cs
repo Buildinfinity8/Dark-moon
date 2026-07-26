@@ -1,4 +1,4 @@
-﻿namespace proj2.ViewModels;
+﻿namespace DarkMoon.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {

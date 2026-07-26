@@ -6,9 +6,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using proj2.Models;
+using DarkMoon.Models;
 
-namespace proj2.Views;
+namespace DarkMoon.Views;
 
 public partial class MainWindow : Window
 {

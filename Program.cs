@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace proj2;
+namespace DarkMoon;
 
 sealed class Program
 {

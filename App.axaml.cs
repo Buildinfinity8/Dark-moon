@@ -4,10 +4,10 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
-using proj2.ViewModels;
-using proj2.Views;
+using DarkMoon.ViewModels;
+using DarkMoon.Views;
 
-namespace proj2;
+namespace DarkMoon;
 
 public partial class App : Application
 {

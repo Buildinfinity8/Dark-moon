@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-namespace proj2.Views;
+namespace DarkMoon.Views;
 
 public partial class AboutWindow : Window
 {

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="proj2.Views.AboutWindow"
+        x:Class="DarkMoon.Views.AboutWindow"
         Title="About Dark moon"
         Width="300" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterOwner"

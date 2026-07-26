@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using proj2.ViewModels;
+using DarkMoon.ViewModels;
 
-namespace proj2;
+namespace DarkMoon;
 
 /// <summary>
 /// Given a view model, returns the corresponding view if possible.

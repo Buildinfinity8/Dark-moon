@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace proj2.Models;
+namespace DarkMoon.Models;
 
 public class MonitorControl
 {
