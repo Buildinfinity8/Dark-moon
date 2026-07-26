@@ -56,6 +56,13 @@ dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFil
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
+## Releases
+
+Pushing a tag like `v1.0.0` (or running the "Release" workflow manually from the Actions tab)
+builds self-contained single-file executables for both Linux (`linux-x64`) and Windows
+(`win-x64`) and attaches them to a GitHub Release automatically — see
+`.github/workflows/release.yml`.
+
 ## Project Structure
 
 - `Models/MonitorControl.cs`: Core logic for hardware interaction (Win32 API & Linux ddcutil).
@@ -67,3 +74,14 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 - [Avalonia UI](https://avaloniaui.net/) - Cross-platform UI framework.
 - [.NET 10](https://dotnet.microsoft.com/) - Modern development platform.
 - [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) - MVVM pattern implementation.
+
+## About Omnori
+
+Dark moon is built by [Omnori](https://omnori.github.io) — a relentless product lab building
+software, automation, and productivity tools of every kind, released as open source under
+libre licenses.
+
+- Website: https://omnori.github.io
+- GitHub: https://github.com/omnori
+- Instagram: https://www.instagram.com/omnori.tech
+- Community (Discord): https://discord.gg/5ag9gjsDde

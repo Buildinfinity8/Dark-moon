@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace proj2.Models;
 
@@ -58,79 +59,103 @@ public class MonitorControl
     private static extern bool SetMonitorColorTemperature(IntPtr hMonitor, MC_COLOR_TEMPERATURE ctCurrentColorTemperature);
 
     // --- Common Interface ---
+    //
+    // All of these are async and never block the calling thread: on Linux they await an
+    // `ddcutil` subprocess (which talks to the monitor over I2C and can easily take
+    // 200ms-2s per call), and on Windows the blocking DXVA2 call is pushed onto a
+    // thread-pool thread via Task.Run. Calling the old synchronous versions directly from a
+    // UI event handler is what made the sliders feel like they locked up the app.
 
-    public static bool GetBrightness(IntPtr handle, out uint current)
+    public static async Task<(bool Success, uint Value)> GetBrightnessAsync(IntPtr handle)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return GetMonitorBrightness(handle, out _, out current, out _);
+            return await Task.Run(() =>
+            {
+                bool ok = GetMonitorBrightness(handle, out _, out uint current, out _);
+                return (ok, current);
+            });
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return Linux_GetVCPValue(10, out current);
+            return await Linux_GetVCPValueAsync(0x10);
         }
-        current = 0;
+        return (false, 0);
+    }
+
+    public static async Task<bool> SetBrightnessAsync(IntPtr handle, uint brightness)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return await Task.Run(() => SetMonitorBrightness(handle, brightness));
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return await Linux_SetVCPValueAsync(0x10, brightness);
+        }
         return false;
     }
 
-    public static bool SetBrightness(IntPtr handle, uint brightness)
+    public static async Task<(bool Success, uint Value)> GetContrastAsync(IntPtr handle)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return SetMonitorBrightness(handle, brightness);
+            return await Task.Run(() =>
+            {
+                bool ok = GetMonitorContrast(handle, out _, out uint current, out _);
+                return (ok, current);
+            });
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return Linux_SetVCPValue(10, brightness);
+            return await Linux_GetVCPValueAsync(0x12);
+        }
+        return (false, 0);
+    }
+
+    public static async Task<bool> SetContrastAsync(IntPtr handle, uint contrast)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return await Task.Run(() => SetMonitorContrast(handle, contrast));
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return await Linux_SetVCPValueAsync(0x12, contrast);
         }
         return false;
     }
 
-    public static bool GetContrast(IntPtr handle, out uint current)
+    /// VCP 0x14 (Select Color Preset) is the DDC/CI equivalent of the Windows color-temperature
+    /// enum below; not every monitor supports it, so a failure here is expected on some hardware.
+    public static async Task<bool> SetColorPresetLinuxAsync(byte presetCode)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return GetMonitorContrast(handle, out _, out current, out _);
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return Linux_GetVCPValue(12, out current);
-        }
-        current = 0;
-        return false;
-    }
-
-    public static bool SetContrast(IntPtr handle, uint contrast)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return SetMonitorContrast(handle, contrast);
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return Linux_SetVCPValue(12, contrast);
-        }
-        return false;
+        return await Linux_SetVCPValueAsync(0x14, presetCode);
     }
 
     // --- Linux ddcutil Helper Methods ---
 
-    private static bool Linux_SetVCPValue(int vcpCode, uint value)
+    private static async Task<bool> Linux_SetVCPValueAsync(int vcpCode, uint value)
     {
         try
         {
             // Note: User might need to configure i2c permissions or use sudo
+            // ddcutil parses the feature-code argument as bare hex digits (no "0x" prefix),
+            // e.g. "setvcp 10 50" means feature 0x10 -- so vcpCode must be rendered as hex here,
+            // not decimal, even though `value` itself is plain decimal.
             var startInfo = new ProcessStartInfo
             {
                 FileName = "ddcutil",
-                Arguments = $"setvcp {vcpCode} {value}",
+                Arguments = $"setvcp {vcpCode:X2} {value}",
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             using var process = Process.Start(startInfo);
-            process?.WaitForExit();
-            return process?.ExitCode == 0;
+            if (process is null) return false;
+            await process.WaitForExitAsync();
+            return process.ExitCode == 0;
         }
         catch (Exception ex)
         {
@@ -139,35 +164,38 @@ public class MonitorControl
         }
     }
 
-    private static bool Linux_GetVCPValue(int vcpCode, out uint value)
+    private static async Task<(bool Success, uint Value)> Linux_GetVCPValueAsync(int vcpCode)
     {
-        value = 0;
         try
         {
+            // Same hex-vs-decimal quirk as Linux_SetVCPValueAsync: the feature code is bare hex.
             var startInfo = new ProcessStartInfo
             {
                 FileName = "ddcutil",
-                Arguments = $"getvcp {vcpCode}",
+                Arguments = $"getvcp {vcpCode:X2}",
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             using var process = Process.Start(startInfo);
-            string output = process?.StandardOutput.ReadToEnd() ?? "";
-            process?.WaitForExit();
+            if (process is null) return (false, 0);
 
             // Expected output: VCP code 0x10 (Brightness                    ): current value =    25, max value =   100
+            string output = await process.StandardOutput.ReadToEndAsync();
+            await process.WaitForExitAsync();
+
             var match = Regex.Match(output, @"current value\s*=\s*(\d+)");
-            if (match.Success && uint.TryParse(match.Groups[1].Value, out value))
+            if (match.Success && uint.TryParse(match.Groups[1].Value, out uint value))
             {
-                return true;
+                return (true, value);
             }
-            return false;
+            return (false, 0);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Linux_GetVCPValue Error: {ex.Message}");
-            return false;
+            return (false, 0);
         }
     }
 
@@ -199,5 +227,17 @@ public class MonitorControl
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             return SetMonitorColorTemperature(hMonitor, temp);
         return false;
+    }
+
+    public static async Task<bool> SetColorTemperatureAsync(IntPtr hMonitor, MC_COLOR_TEMPERATURE temp)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return false;
+        return await Task.Run(() => SetMonitorColorTemperature(hMonitor, temp));
+    }
+
+    public static async Task<List<PHYSICAL_MONITOR>> GetPhysicalMonitorsAsync(IntPtr windowHandle)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return new List<PHYSICAL_MONITOR>();
+        return await Task.Run(() => GetPhysicalMonitors(windowHandle));
     }
 }

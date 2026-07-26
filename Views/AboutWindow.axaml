@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="proj2.Views.AboutWindow"
+        Title="About Dark moon"
+        Width="300" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#1a1a2e">
+
+  <Border Margin="16" CornerRadius="16"
+          Background="#16213e"
+          BorderBrush="#2a2a4a" BorderThickness="1">
+    <StackPanel Margin="20" Spacing="14">
+
+      <StackPanel Spacing="2">
+        <TextBlock Text="Dark moon" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+        <TextBlock Text="by Omnori" FontSize="12" Foreground="#888"/>
+      </StackPanel>
+
+      <TextBlock Text="Building Products With No End."
+                 FontSize="13" FontStyle="Italic" Foreground="#ccc"/>
+
+      <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#aaa"
+                 Text="Omnori is a relentless product lab. We build software, automation, and productivity tools of every kind, listening to friction, prototyping rapidly, and shipping continuously. Everything we ship is released as open source under libre licenses, for anyone to use, inspect, and build on."/>
+
+      <StackPanel Spacing="6">
+        <Button Content="Website — omnori.github.io"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                Click="Website_Click"/>
+        <Button Content="GitHub — github.com/omnori"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                Click="GitHub_Click"/>
+        <Button Content="Instagram — @omnori.tech"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                Click="Instagram_Click"/>
+        <Button Content="Community — Discord"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                Click="Discord_Click"/>
+      </StackPanel>
+
+      <Button Content="Close" HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Click="Close_Click"/>
+
+    </StackPanel>
+  </Border>
+</Window>
