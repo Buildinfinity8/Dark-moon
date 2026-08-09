@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="DarkMoon.Views.MainWindow"
         Title="Dark moon"
+        Icon="/Assets/logo.png"
         Width="320" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterScreen"
         Background="#1a1a2e">
@@ -17,13 +18,16 @@
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-          <TextBlock Text="Dark moon"
-                     FontSize="20" FontWeight="SemiBold"
-                     Foreground="White"/>
-          <TextBlock Text="by Omnori"
-                     FontSize="11"
-                     Foreground="#888"/>
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+          <Image Source="/Assets/logo.png" Width="28" Height="28" VerticalAlignment="Center"/>
+          <StackPanel>
+            <TextBlock Text="Dark moon"
+                       FontSize="20" FontWeight="SemiBold"
+                       Foreground="White"/>
+            <TextBlock Text="by Omnori"
+                       FontSize="11"
+                       Foreground="#888"/>
+          </StackPanel>
         </StackPanel>
 
         <!-- Connection indicator: green once a DDC/CI monitor answers, grey otherwise -->

@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="DarkMoon.Views.AboutWindow"
         Title="About Dark moon"
+        Icon="/Assets/logo.png"
         Width="300" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterOwner"
         Background="#1a1a2e">
@@ -11,9 +12,12 @@
           BorderBrush="#2a2a4a" BorderThickness="1">
     <StackPanel Margin="20" Spacing="14">
 
-      <StackPanel Spacing="2">
-        <TextBlock Text="Dark moon" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
-        <TextBlock Text="by Omnori" FontSize="12" Foreground="#888"/>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Image Source="/Assets/logo.png" Width="32" Height="32" VerticalAlignment="Center"/>
+        <StackPanel Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Dark moon" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+          <TextBlock Text="by Omnori" FontSize="12" Foreground="#888"/>
+        </StackPanel>
       </StackPanel>
 
       <TextBlock Text="Building Products With No End."
